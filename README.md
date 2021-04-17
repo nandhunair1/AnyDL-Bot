@@ -4,16 +4,16 @@
 
 ### Deploy to Heroku 🏃‍♂
 
-[![Deploy To Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/ImJanindu/AnyDL-Bot)
+[![Deploy To Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/nandhunair1/AnyDL-Bot)
 
 ### Credits:
 
 [Dashezup](https://github.com/dashezup) 'Author'
 
-[Infinity BOTs](https://t.me/Infinity_BOTs)
+[Support Group](https://t.me/tvseriezzz)
 
 [Pyrogram Library](https://github.com/pyrogram/pyrogram)
 
 ### Developers:
 
-[@ImJanindu](https://t.me/ImJanindu)
+[MrC《》VENOM](https://t.me/MrC_VENOM)
