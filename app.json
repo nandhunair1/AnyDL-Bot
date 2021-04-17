@@ -1,7 +1,7 @@
 {
     "name": "AnyDL Bot",
     "description": "A bot that can download video or audio from any website.",
-    "logo": "https://telegra.ph/file/5aee6774b3c4ab6f0b5ed.jpg",
+    "logo": "https://telegra.ph/file/8ba8c0c3014f602bb7fbc.jpg",
     "keywords": [
         "AnyDL",
         "Video Downloader",
@@ -9,7 +9,7 @@
         "JE Bots"
     ],
     "website": "https://infinityje.com",
-    "repository": "https://github.com/ImJanindu/AnyDL-Bot",
+    "repository": "https://github.com/nandhunair1/AnyDL-Bot",
     "success_url": "https://t.me/Infinity_BOTs",
     "env": {
         "TG_BOT_TOKEN": {
