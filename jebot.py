@@ -6,6 +6,7 @@ from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from youtube_dl import YoutubeDL
 from opencc import OpenCC
 from config import Config
+import wget
 
 Jebot = Client(
    "YT Downloader",
@@ -37,10 +38,10 @@ Hit help button to find out more about how to use me</b>""",
                                         InlineKeyboardButton(
                                             "Help", callback_data="help"),
                                         InlineKeyboardButton(
-                                            "😎 Developer 😎", url="https://t.me/MrC_VENOM")
+                                            "🎈 Group 🎈", url="https://t.me/tvseriezzz")
                                     ],[
                                       InlineKeyboardButton(
-                                            "❣ Support Group ❣", url="https://t.me/tvseriezzz")
+                                            "😎 Developer 😎", url="https://t.me/MrC_VENOM")
                                     ]]
                             ),        
             disable_web_page_preview=True,        
@@ -64,7 +65,7 @@ Just send a Youtube url to download it in video or audio format!
                                             "About", callback_data="about"),
                                   ],[
                                         InlineKeyboardButton(
-                                            "❣ Support Group ❣", url="https://t.me/tvseriezzz")
+                                            "😎 Developer 😎", url="https://t.me/MrC_VENOM")
                                     ]]
                             ),        
             disable_web_page_preview=True,        
@@ -77,7 +78,7 @@ async def about(client, message):
                chat_id=message.chat.id,
                text="""<b>About AnyDL Bot!</b>
 
-<b>♞ Developer:</b> <a href="https://t.me/MrC_VENOM">MrC《》VENOM 🇮🇳</a>
+<b>♞ Developer:</b> <a href="https://t.me/MrC_VENOM">MrC《》VENOM</a>
 
 <b>♞ Support:</b> <a href="https://t.me/tvseriezzz">Support Group</a>
 
@@ -89,7 +90,7 @@ async def about(client, message):
                                         InlineKeyboardButton(
                                             "Back", callback_data="help"),
                                         InlineKeyboardButton(
-                                            "❣ Support Group ❣", url="https://t.me/tvseriezzz")
+                                            "😎 Developer 😎", url="https://t.me/tvseriezzz")
                                     ]]
                             ),        
             disable_web_page_preview=True,        
@@ -104,7 +105,7 @@ async def about(client, message):
                    & filters.regex(YTDL_REGEX))
 async def ytdl_with_button(_, message: Message):
     await message.reply_text(
-        "**Choose download type 🤗**",
+        "**Choose download type👇**",
         reply_markup=InlineKeyboardMarkup(
             [
                 [
@@ -154,29 +155,52 @@ async def callback_query_ytdl_audio(_, callback_query):
     await callback_query.message.delete()
 
 
-async def send_audio(message: Message, info_dict, audio_file):
-    basename = audio_file.rsplit(".", 1)[-2]
-    # .webm -> .weba
-    if info_dict['ext'] == 'webm':
-        audio_file_weba = basename + ".weba"
-        os.rename(audio_file, audio_file_weba)
-        audio_file = audio_file_weba
-    # thumbnail
-    thumbnail_url = info_dict['thumbnail']
-    thumbnail_file = basename + "." + \
-        get_file_extension_from_url(thumbnail_url)
-    # info (s2tw)
-    webpage_url = info_dict['webpage_url']
-    title = '@MrC_VENOM - '+s2tw(info_dict['title'])
-    caption = f"<b><a href=\"{webpage_url}\">{title}</a></b>"
-    duration = int(float(info_dict['duration']))
-    performer = s2tw(info_dict['uploader'])
-    await message.reply_audio(audio_file, caption=caption, duration=duration,
+if Config.AUDIO_THUMBNAIL == "No":
+   async def send_audio(message: Message, info_dict, audio_file):
+       basename = audio_file.rsplit(".", 1)[-2]
+       # .webm -> .weba
+       if info_dict['ext'] == 'webm':
+           audio_file_weba = basename + ".weba"
+           os.rename(audio_file, audio_file_weba)
+           audio_file = audio_file_weba
+       # thumbnail
+       thumbnail_url = info_dict['thumbnail']
+       thumbnail_file = basename + "." + \
+           get_file_extension_from_url(thumbnail_url)
+       # info (s2tw)
+       webpage_url = info_dict['webpage_url']
+       title = s2tw(info_dict['title'])
+       caption = f"<b><a href=\"{webpage_url}\">{title}</a></b>"
+       duration = int(float(info_dict['duration']))
+       performer = s2tw(info_dict['uploader'])
+       await message.reply_audio(audio_file, caption=caption, duration=duration,
                               performer=performer, title=title,
                               parse_mode='HTML', thumb=thumbnail_file)
-    os.remove(audio_file)
-    os.remove(thumbnail_file)
+       os.remove(audio_file)
+       os.remove(thumbnail_file)
 
+else:
+    async def send_audio(message: Message, info_dict, audio_file):
+       basename = audio_file.rsplit(".", 1)[-2]
+       # .webm -> .weba
+       if info_dict['ext'] == 'webm':
+           audio_file_weba = basename + ".weba"
+           os.rename(audio_file, audio_file_weba)
+           audio_file = audio_file_weba
+       # thumbnail
+       lol = Config.AUDIO_THUMBNAIL
+       thumbnail_file = wget.download(lol)
+       # info (s2tw)
+       webpage_url = info_dict['webpage_url']
+       title = s2tw(info_dict['title'])
+       caption = f"<b><a href=\"{webpage_url}\">{title}</a></b>"
+       duration = int(float(info_dict['duration']))
+       performer = s2tw(info_dict['uploader'])
+       await message.reply_audio(audio_file, caption=caption, duration=duration,
+                              performer=performer, title=title,
+                              parse_mode='HTML', thumb=thumbnail_file)
+       os.remove(audio_file)
+       os.remove(thumbnail_file)
 
 @Jebot.on_callback_query(filters.regex("^ytdl_video$"))
 async def callback_query_ytdl_video(_, callback_query):
@@ -209,27 +233,46 @@ async def callback_query_ytdl_video(_, callback_query):
     await callback_query.message.reply_to_message.delete()
     await callback_query.message.delete()
 
+if Config.VIDEO_THUMBNAIL == "No":
+   async def send_video(message: Message, info_dict, video_file):
+      basename = video_file.rsplit(".", 1)[-2]
+      # thumbnail
+      thumbnail_url = info_dict['thumbnail']
+      thumbnail_file = basename + "." + \
+          get_file_extension_from_url(thumbnail_url)
+      # info (s2tw)
+      webpage_url = info_dict['webpage_url']
+      title = s2tw(info_dict['title'])
+      caption = f"<b><a href=\"{webpage_url}\">{title}</a></b>"
+      duration = int(float(info_dict['duration']))
+      width, height = get_resolution(info_dict)
+      await message.reply_video(
+          video_file, caption=caption, duration=duration,
+          width=width, height=height, parse_mode='HTML',
+          thumb=thumbnail_file)
 
-async def send_video(message: Message, info_dict, video_file):
-    basename = video_file.rsplit(".", 1)[-2]
-    # thumbnail
-    thumbnail_url = info_dict['thumbnail']
-    thumbnail_file = basename + "." + \
-        get_file_extension_from_url(thumbnail_url)
-    # info (s2tw)
-    webpage_url = info_dict['webpage_url']
-    title = '@MrC_VENOM - '+s2tw(info_dict['title'])
-    caption = f"<b><a href=\"{webpage_url}\">{title}</a></b>"
-    duration = int(float(info_dict['duration']))
-    width, height = get_resolution(info_dict)
-    await message.reply_video(
-        video_file, caption=caption, duration=duration,
-        width=width, height=height, parse_mode='HTML',
-        thumb=thumbnail_file)
+      os.remove(video_file)
+      os.remove(thumbnail_file)
 
-    os.remove(video_file)
-    os.remove(thumbnail_file)
+else:
+   async def send_video(message: Message, info_dict, video_file):
+      basename = video_file.rsplit(".", 1)[-2]
+      # thumbnail
+      lel = Config.VIDEO_THUMBNAIL
+      thumbnail_file = wget.download(lel)
+      # info (s2tw)
+      webpage_url = info_dict['webpage_url']
+      title = s2tw(info_dict['title'])
+      caption = f"<b><a href=\"{webpage_url}\">{title}</a></b>"
+      duration = int(float(info_dict['duration']))
+      width, height = get_resolution(info_dict)
+      await message.reply_video(
+          video_file, caption=caption, duration=duration,
+          width=width, height=height, parse_mode='HTML',
+          thumb=thumbnail_file)
 
+      os.remove(video_file)
+      os.remove(thumbnail_file)
 
 def get_file_extension_from_url(url):
     url_path = urlparse(url).path
