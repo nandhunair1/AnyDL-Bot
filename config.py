@@ -7,3 +7,7 @@ class Config(object):
     APP_ID = int(os.environ.get("APP_ID", 12345))
 
     API_HASH = os.environ.get("API_HASH", "")
+
+    AUDIO_THUMBNAIL = os.environ.get("AUDIO_THUMBNAIL", "")
+
+    VIDEO_THUMBNAIL = os.environ.get("VIDEO_THUMBNAIL", "")
